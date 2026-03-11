@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Тренажер</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #e9ecef;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+        }
+        .card {
+            background: white;
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            text-align: center;
+            max-width: 500px;
+            width: 100%;
+        }
+        h2 { margin-top: 0; color: #333; margin-bottom: 20px; }
+        .mode-selector {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        .mode-btn {
+            padding: 10px 15px;
+            border: 2px solid #007bff;
+            background: white;
+            color: #007bff;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: 0.3s;
+        }
+        .mode-btn.active {
+            background: #007bff;
+            color: white;
+        }
+        .settings {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            text-align: left;
+            font-size: 0.95rem;
+            border: 1px solid #dee2e6;
+        }
+        .settings label {
+            display: block;
+            margin: 8px 0;
+            cursor: pointer;
+        }
+        .question {
+            font-size: 1.6rem;
+            margin: 20px 0;
+            font-weight: bold;
+            color: #2c3e50;
+            min-height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .options {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+        button.option-btn {
+            padding: 15px;
+            font-size: 1rem;
+            border: 2px solid #e0e0e0;
+            background: white;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-weight: 500;
+        }
+        button.option-btn:hover { background-color: #f8f9fa; border-color: #ccc; }
+        button.option-btn.correct { background-color: #d4edda; border-color: #28a745; color: #155724; }
+        button.option-btn.wrong { background-color: #f8d7da; border-color: #dc3545; color: #721c24; }
+        .score { margin-top: 20px; color: #666; font-size: 1rem; font-weight: bold; }
+        .feedback { height: 25px; margin-bottom: 5px; font-weight: bold; font-size: 1.1rem;}
+        
+        .hidden { display: none; }
+    </style>
+</head>
+<body>
+
+<div class="card">
+    <h2>Тренажер</h2>
+    
+    <div class="mode-selector">
+        <button id="btnModeVerbs" class="mode-btn active" onclick="setMode('verbs')">Відмінювання дієслів</button>
+        <button id="btnModeVocab" class="mode-btn" onclick="setMode('vocab')">Вчити слова</button>
+    </div>
+    
+    <div id="settingsVerbs" class="settings">
+        <strong>Обери групи дієслів:</strong>
+        <label><input type="checkbox" id="chkOld" checked> База (Robiť, Hrať...)</label>
+        <label><input type="checkbox" id="chkByt" checked> Дієслово BYŤ (Бути)</label>
+        <label><input type="checkbox" id="chkNew" checked> Група -ovať (Pracovať...)</label>
+    </div>
+
+    <div id="settingsVocab" class="settings hidden">
+        <strong>Обери теми для словника:</strong>
+        <label><input type="checkbox" id="catFamily" checked> Сім'я та стосунки</label>
+        <label><input type="checkbox" id="catPhrases" checked> Фрази та займенники</label>
+        <label><input type="checkbox" id="catTime" checked> Час та прислівники</label>
+        <label><input type="checkbox" id="catVarious" checked> Різні слова (одяг, завдання...)</label>
+    </div>
+
+    <div class="feedback" id="feedback"></div>
+    <div class="question" id="question">...</div>
+    <div class="options" id="options"></div>
+    
+    <div class="score">Рахунок: <span id="scoreVal" style="color: green;">0</span> | Помилок: <span id="mistakesVal" style="color: red;">0</span></div>
+</div>
+
+<script>
+    const dataOld = {
+        'robiť': ['robím', 'robíš', 'robí', 'robíme', 'robíte', 'robia'],
+        'kúpiť': ['kúpim', 'kúpiš', 'kúpi', 'kúpime', 'kúpite', 'kúpia'],
+        'hrať':  ['hrám',  'hráš',  'hrá',  'hráme',  'hráte',  'hrajú'],
+        'volať': ['volám', 'voláš', 'volá', 'voláme', 'voláte', 'volajú']
+    };
+    const dataByt = {
+        'byť': ['som', 'si', 'je', 'sme', 'ste', 'sú']
+    };
+    const dataNew = {
+        'čítať':    ['čítam', 'čítaš', 'číta', 'čítame', 'čítate', 'čítajú'],
+        'pracovať': ['pracujem', 'pracuješ', 'pracuje', 'pracujeme', 'pracujete', 'pracujú'],
+        'cestovať': ['cestujem', 'cestuješ', 'cestuje', 'cestujeme', 'cestujete', 'cestujú']
+    };
+    const pronouns = ['Ja', 'Ty', 'On/Ona/Ono', 'My', 'Vy', 'Oni'];
+
+    const vocabData = [
+        {sk: 'Cítim sa zle', uk: 'Я почуваюся погано', cat: 'catPhrases'},
+        {sk: 'Cítim sa výborne', uk: 'Я почуваюся чудово', cat: 'catPhrases'},
+        {sk: 'chcem', uk: 'я хочу', cat: 'catPhrases'},
+        {sk: 'jej', uk: 'її', cat: 'catPhrases'},
+        {sk: 'jeho', uk: 'його', cat: 'catPhrases'},
+        {sk: 'ich', uk: 'їх', cat: 'catPhrases'},
+        {sk: 'Nerozumiem', uk: 'Я не розумію', cat: 'catPhrases'},
+        {sk: 'Dáme si kávu?', uk: 'Вип\'ємо кави?', cat: 'catPhrases'},
+        
+        {sk: 'starý otec / dedko', uk: 'дідусь', cat: 'catFamily'},
+        {sk: 'stará mama / babka', uk: 'бабуся', cat: 'catFamily'},
+        {sk: 'starí rodičia', uk: 'старші батьки (дід і баба)', cat: 'catFamily'},
+        {sk: 'manžel', uk: 'чоловік (у шлюбі)', cat: 'catFamily'},
+        {sk: 'manželka', uk: 'дружина', cat: 'catFamily'},
+        {sk: 'bratranec', uk: 'двоюрідний брат', cat: 'catFamily'},
+        {sk: 'sesternica', uk: 'двоюрідна сестра', cat: 'catFamily'},
+        {sk: 'svokor', uk: 'свекор / тесть', cat: 'catFamily'},
+        {sk: 'svokra', uk: 'свекруха / теща', cat: 'catFamily'},
+        {sk: 'ženatý muž', uk: 'одружений чоловік', cat: 'catFamily'},
+        {sk: 'vydatá žena', uk: 'заміжня жінка', cat: 'catFamily'},
+        {sk: 'slobodný muž', uk: 'незаміжній чоловік / холостяк', cat: 'catFamily'},
+        {sk: 'slobodná žena', uk: 'незаміжня жінка', cat: 'catFamily'},
+        
+        {sk: 'vždy', uk: 'завжди', cat: 'catTime'},
+        {sk: 'nikdy', uk: 'ніколи', cat: 'catTime'},
+        {sk: 'často', uk: 'часто', cat: 'catTime'},
+        {sk: 'zriedka', uk: 'рідко', cat: 'catTime'},
+        {sk: 'včera', uk: 'вчора', cat: 'catTime'},
+        {sk: 'dnes', uk: 'сьогодні', cat: 'catTime'},
+        {sk: 'zajtra', uk: 'завтра', cat: 'catTime'},
+        {sk: 'doobeda', uk: 'до обіду', cat: 'catTime'},
+        {sk: 'poobede', uk: 'після обіду', cat: 'catTime'},
+        {sk: 'večer', uk: 'вечір / ввечері', cat: 'catTime'},
+        
+        {sk: 'Tínedžer má 13 rokov', uk: 'Підлітку 13 років', cat: 'catVarious'},
+        {sk: 'jednoduchá úloha', uk: 'просте завдання', cat: 'catVarious'},
+        {sk: 'zložitá úloha', uk: 'складне завдання', cat: 'catVarious'},
+        {sk: 'tešiť sa', uk: 'радіти / чекати з нетерпінням', cat: 'catVarious'},
+        {sk: 'obliekať sa', uk: 'одягатися', cat: 'catVarious'},
+        {sk: 'vziať si tašku', uk: 'взяти сумку', cat: 'catVarious'},
+        {sk: 'výlet na chatu', uk: 'поїздка на дачу', cat: 'catVarious'},
+        {sk: 'tiež', uk: 'також', cat: 'catVarious'}
+    ];
+
+    let currentMode = 'verbs';
+    let score = 0;
+    let mistakes = 0;
+
+    function setMode(mode) {
+        currentMode = mode;
+        document.getElementById('btnModeVerbs').classList.toggle('active', mode === 'verbs');
+        document.getElementById('btnModeVocab').classList.toggle('active', mode === 'vocab');
+        
+        document.getElementById('settingsVerbs').classList.toggle('hidden', mode === 'vocab');
+        document.getElementById('settingsVocab').classList.toggle('hidden', mode === 'verbs');
+        
+        document.getElementById('feedback').innerText = '';
+        startGame();
+    }
+
+    function startGame() {
+        if (currentMode === 'verbs') {
+            playVerbs();
+        } else {
+            playVocab();
+        }
+    }
+
+    function playVerbs() {
+        let activeData = {};
+        if (document.getElementById('chkOld').checked) Object.assign(activeData, dataOld);
+        if (document.getElementById('chkByt').checked) Object.assign(activeData, dataByt);
+        if (document.getElementById('chkNew').checked) Object.assign(activeData, dataNew);
+
+        if (Object.keys(activeData).length === 0) {
+            document.getElementById('chkByt').checked = true;
+            Object.assign(activeData, dataByt);
+        }
+
+        const verbs = Object.keys(activeData);
+        const currentVerb = verbs[Math.floor(Math.random() * verbs.length)];
+        const currentIndex = Math.floor(Math.random() * 6); 
+
+        const pronoun = pronouns[currentIndex];
+        document.getElementById('question').innerText = `${pronoun} + ${currentVerb.toUpperCase()}`;
+
+        const correctAns = activeData[currentVerb][currentIndex];
+        let options = [correctAns];
+
+        while (options.length < 4) {
+            let randomIdx = Math.floor(Math.random() * 6);
+            let wrongAns = activeData[currentVerb][randomIdx];
+            if (!options.includes(wrongAns)) options.push(wrongAns);
+        }
+
+        renderButtons(options, correctAns);
+    }
+
+    function playVocab() {
+        let activeVocab = vocabData.filter(item => {
+            return document.getElementById(item.cat) && document.getElementById(item.cat).checked;
+        });
+
+        if (activeVocab.length < 4) {
+            document.getElementById('catFamily').checked = true;
+            document.getElementById('catPhrases').checked = true;
+            activeVocab = vocabData; 
+        }
+
+        const currentItem = activeVocab[Math.floor(Math.random() * activeVocab.length)];
+        document.getElementById('question').innerText = currentItem.sk;
+
+        let options = [currentItem.uk];
+        
+        while (options.length < 4) {
+            let randomItem = vocabData[Math.floor(Math.random() * vocabData.length)];
+            if (!options.includes(randomItem.uk)) options.push(randomItem.uk);
+        }
+
+        renderButtons(options, currentItem.uk);
+    }
+
+    function renderButtons(options, correctAns) {
+        options.sort(() => Math.random() - 0.5);
+        const container = document.getElementById('options');
+        container.innerHTML = '';
+        
+        options.forEach(opt => {
+            const btn = document.createElement('button');
+            btn.className = 'option-btn';
+            btn.innerText = opt;
+            btn.onclick = () => checkAnswer(btn, opt, correctAns);
+            container.appendChild(btn);
+        });
+    }
+
+    function checkAnswer(btn, selected, correct) {
+        const buttons = document.querySelectorAll('.option-btn');
+        buttons.forEach(b => b.disabled = true); 
+
+        if (selected === correct) {
+            btn.classList.add('correct');
+            document.getElementById('feedback').innerText = '✅ Правильно!';
+            document.getElementById('feedback').style.color = '#28a745';
+            score++;
+        } else {
+            btn.classList.add('wrong');
+            buttons.forEach(b => {
+                if(b.innerText === correct) b.classList.add('correct');
+            });
+            document.getElementById('feedback').innerText = `❌ Помилка! Правильно: ${correct}`;
+            document.getElementById('feedback').style.color = '#dc3545';
+            mistakes++;
+        }
+
+        document.getElementById('scoreVal').innerText = score;
+        document.getElementById('mistakesVal').innerText = mistakes;
+
+        setTimeout(() => {
+            document.getElementById('feedback').innerText = '';
+            startGame();
+        }, 1800); 
+    }
+
+    ['chkOld', 'chkByt', 'chkNew', 'catFamily', 'catPhrases', 'catTime', 'catVarious'].forEach(id => {
+        document.getElementById(id).addEventListener('change', startGame);
+    });
+
+    startGame();
+</script>
+
+</body>
+</html>
