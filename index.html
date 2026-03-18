@@ -119,8 +119,9 @@
         <label><input type="checkbox" id="catPhrases"> Фрази та займенники</label>
         <label><input type="checkbox" id="catTime"> Час (Минуле/Теперішнє)</label>
         <label><input type="checkbox" id="catTimeFuture"> Час (Майбутнє/Дні тижня)</label>
+        <label><input type="checkbox" id="catNumbers" checked> Числа (0-1000)</label>
         <label><input type="checkbox" id="catVarious"> Різні слова</label>
-        <label><input type="checkbox" id="catPastPhrases" checked> Нові слова (-núť, минулий час)</label>
+        <label><input type="checkbox" id="catPastPhrases"> Нові слова (-núť, минулий час)</label>
     </div>
 
     <div class="feedback" id="feedback"></div>
@@ -203,6 +204,26 @@
         {sk: 'piatok', uk: 'п\'ятниця', cat: 'catTimeFuture'},
         {sk: 'sobota', uk: 'субота', cat: 'catTimeFuture'},
         {sk: 'nedeľa', uk: 'неділя', cat: 'catTimeFuture'},
+        
+        {sk: 'nula', uk: 'нуль (0)', cat: 'catNumbers'},
+        {sk: 'jeden', uk: 'один (1)', cat: 'catNumbers'},
+        {sk: 'dva', uk: 'два (2)', cat: 'catNumbers'},
+        {sk: 'tri', uk: 'три (3)', cat: 'catNumbers'},
+        {sk: 'štyri', uk: 'чотири (4)', cat: 'catNumbers'},
+        {sk: 'päť', uk: 'п\'ять (5)', cat: 'catNumbers'},
+        {sk: 'šesť', uk: 'шість (6)', cat: 'catNumbers'},
+        {sk: 'sedem', uk: 'сім (7)', cat: 'catNumbers'},
+        {sk: 'osem', uk: 'вісім (8)', cat: 'catNumbers'},
+        {sk: 'deväť', uk: 'дев\'ять (9)', cat: 'catNumbers'},
+        {sk: 'desať', uk: 'десять (10)', cat: 'catNumbers'},
+        {sk: 'jedenásť', uk: 'одинадцять (11)', cat: 'catNumbers'},
+        {sk: 'dvanásť', uk: 'дванадцять (12)', cat: 'catNumbers'},
+        {sk: 'dvadsať', uk: 'двадцять (20)', cat: 'catNumbers'},
+        {sk: 'tridsať', uk: 'тридцять (30)', cat: 'catNumbers'},
+        {sk: 'štyridsať', uk: 'сорок (40)', cat: 'catNumbers'},
+        {sk: 'päťdesiat', uk: 'п\'ятдесят (50)', cat: 'catNumbers'},
+        {sk: 'sto', uk: 'сто (100)', cat: 'catNumbers'},
+        {sk: 'tisíc', uk: 'тисяча (1000)', cat: 'catNumbers'},
         
         {sk: 'Tínedžer má 13 rokov', uk: 'Підлітку 13 років', cat: 'catVarious'},
         {sk: 'jednoduchá úloha', uk: 'просте завдання', cat: 'catVarious'},
@@ -346,7 +367,7 @@
         }, 1600); 
     }
 
-    ['chkOld', 'chkByt', 'chkNew', 'chkModal', 'chkPast', 'catFamily', 'catPhrases', 'catTime', 'catTimeFuture', 'catVarious', 'catPastPhrases'].forEach(id => {
+    ['chkOld', 'chkByt', 'chkNew', 'chkModal', 'chkPast', 'catFamily', 'catPhrases', 'catTime', 'catTimeFuture', 'catNumbers', 'catVarious', 'catPastPhrases'].forEach(id => {
         const el = document.getElementById(id);
         if(el) el.addEventListener('change', startGame);
     });
