@@ -22,7 +22,7 @@
             border-radius: 15px;
             box-shadow: 0 4px 15px rgba(0,0,0,0.1);
             text-align: center;
-            max-width: 500px;
+            max-width: 550px;
             width: 100%;
         }
         h2 { margin-top: 0; color: #333; margin-bottom: 20px; }
@@ -55,11 +55,16 @@
             text-align: left;
             font-size: 0.95rem;
             border: 1px solid #dee2e6;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 5px 15px;
         }
+        .settings strong { grid-column: 1 / -1; margin-bottom: 5px; display: block; }
         .settings label {
             display: block;
-            margin: 8px 0;
+            margin: 5px 0;
             cursor: pointer;
+            font-size: 0.9rem;
         }
         .question {
             font-size: 1.6rem;
@@ -92,6 +97,10 @@
         .score { margin-top: 20px; color: #666; font-size: 1rem; font-weight: bold; }
         .feedback { height: 25px; margin-bottom: 5px; font-weight: bold; font-size: 1.1rem;}
         .hidden { display: none; }
+        
+        @media (max-width: 480px) {
+            .settings { grid-template-columns: 1fr; }
+        }
     </style>
 </head>
 <body>
@@ -100,7 +109,7 @@
     <h2>Тренажер</h2>
     
     <div class="mode-selector">
-        <button id="btnModeVerbs" class="mode-btn active" onclick="setMode('verbs')">Відмінювання дієслів</button>
+        <button id="btnModeVerbs" class="mode-btn active" onclick="setMode('verbs')">Дієслова (Граматика)</button>
         <button id="btnModeVocab" class="mode-btn" onclick="setMode('vocab')">Вчити слова</button>
     </div>
     
@@ -110,18 +119,20 @@
         <label><input type="checkbox" id="chkByt"> Дієслово BYŤ (Бути)</label>
         <label><input type="checkbox" id="chkNew"> Група -ovať (Pracovať...)</label>
         <label><input type="checkbox" id="chkModal"> Модальні (Musieť, Môcť...)</label>
-        <label><input type="checkbox" id="chkPast" checked> Минулий час (Rozumel, Rozhodol...)</label>
+        <label><input type="checkbox" id="chkPast"> Минулий час (Rozumel, Rozhodol...)</label>
     </div>
 
     <div id="settingsVocab" class="settings hidden">
         <strong>Обери теми для словника:</strong>
-        <label><input type="checkbox" id="catFamily"> Сім'я та стосунки</label>
-        <label><input type="checkbox" id="catPhrases"> Фрази та займенники</label>
-        <label><input type="checkbox" id="catTime"> Час (Минуле/Теперішнє)</label>
-        <label><input type="checkbox" id="catTimeFuture"> Час (Майбутнє/Дні тижня)</label>
-        <label><input type="checkbox" id="catNumbers" checked> Числа (0-1000)</label>
-        <label><input type="checkbox" id="catVarious"> Різні слова</label>
-        <label><input type="checkbox" id="catPastPhrases"> Нові слова (-núť, минулий час)</label>
+        <label><input type="checkbox" id="catQuestions" checked> ❓ Питання та сполучники</label>
+        <label><input type="checkbox" id="catIntro" checked> 💬 База (Так/Ні, Вступні)</label>
+        <label><input type="checkbox" id="catTime"> 🕒 Час (Сьогодні, вранці...)</label>
+        <label><input type="checkbox" id="catTimeFuture"> 📅 Дні тижня та майбутнє</label>
+        <label><input type="checkbox" id="catNumbers"> 🔢 Числа (0-1000)</label>
+        <label><input type="checkbox" id="catFamily"> 👨‍👩‍👧 Сім'я та стосунки</label>
+        <label><input type="checkbox" id="catPhrases"> 🗣 Фрази та займенники</label>
+        <label><input type="checkbox" id="catPastPhrases"> 🔙 Нові слова (Минулий час)</label>
+        <label><input type="checkbox" id="catVarious"> 📦 Різні слова</label>
     </div>
 
     <div class="feedback" id="feedback"></div>
@@ -164,36 +175,55 @@
     const pronouns = ['Ja', 'Ty', 'On', 'My', 'Vy', 'Oni'];
 
     const vocabData = [
-        {sk: 'Cítim sa zle', uk: 'Я почуваюся погано', cat: 'catPhrases'},
-        {sk: 'Cítim sa výborne', uk: 'Я почуваюся чудово', cat: 'catPhrases'},
-        {sk: 'jej', uk: 'її', cat: 'catPhrases'},
-        {sk: 'jeho', uk: 'його', cat: 'catPhrases'},
-        {sk: 'ich', uk: 'їх', cat: 'catPhrases'},
-        {sk: 'Nerozumiem', uk: 'Я не розумію', cat: 'catPhrases'},
-        {sk: 'zase / znova', uk: 'знову', cat: 'catPhrases'},
-        {sk: 'zatiaľ', uk: 'поки', cat: 'catPhrases'},
-        {sk: 'práve (teraz)', uk: 'саме (зараз)', cat: 'catPhrases'},
-        {sk: 'konečne', uk: 'нарешті', cat: 'catPhrases'},
-        {sk: 'teda', uk: 'отже / так', cat: 'catPhrases'},
-        {sk: 'asi', uk: 'мабуть / напевно', cat: 'catPhrases'},
-        {sk: 'možno', uk: 'можливо', cat: 'catPhrases'},
-        {sk: 'naozaj?', uk: 'справді?', cat: 'catPhrases'},
-        
-        {sk: 'starý otec', uk: 'дідусь', cat: 'catFamily'},
-        {sk: 'stará mama', uk: 'бабуся', cat: 'catFamily'},
-        {sk: 'svokor', uk: 'свекор / тесть', cat: 'catFamily'},
-        {sk: 'svokra', uk: 'свекруха / теща', cat: 'catFamily'},
-        {sk: 'ženatý muž', uk: 'одружений чоловік', cat: 'catFamily'},
-        {sk: 'vydatá žena', uk: 'заміжня жінка', cat: 'catFamily'},
-        {sk: 'slobodný / slobodná', uk: 'неодружений / незаміжня', cat: 'catFamily'},
-        
+        {sk: 'kto', uk: 'хто', cat: 'catQuestions'},
+        {sk: 'čo', uk: 'що (питання)', cat: 'catQuestions'},
+        {sk: 'kde', uk: 'де', cat: 'catQuestions'},
+        {sk: 'prečo', uk: 'чому', cat: 'catQuestions'},
+        {sk: 'ako', uk: 'як', cat: 'catQuestions'},
+        {sk: 'kedy', uk: 'коли (питання)', cat: 'catQuestions'},
+        {sk: 'a / i', uk: 'і / та', cat: 'catQuestions'},
+        {sk: 'ale', uk: 'але', cat: 'catQuestions'},
+        {sk: 'alebo', uk: 'або', cat: 'catQuestions'},
+        {sk: 'že', uk: 'що (сполучник)', cat: 'catQuestions'},
+        {sk: 'keď', uk: 'коли (сполучник)', cat: 'catQuestions'},
+        {sk: 'kým', uk: 'поки', cat: 'catQuestions'},
+        {sk: 'lebo / pretože', uk: 'бо / тому що', cat: 'catQuestions'},
+        {sk: 'ak', uk: 'якщо', cat: 'catQuestions'},
+        {sk: 'hoci', uk: 'хоча', cat: 'catQuestions'},
+        {sk: 'takže', uk: 'отже (тому)', cat: 'catQuestions'},
+        {sk: 'či', uk: 'чи', cat: 'catQuestions'},
+        {sk: 'preto', uk: 'тому', cat: 'catQuestions'},
+        {sk: 'aj keď', uk: 'навіть якщо', cat: 'catQuestions'},
+        {sk: 'áno', uk: 'так', cat: 'catIntro'},
+        {sk: 'nie', uk: 'ні', cat: 'catIntro'},
+        {sk: 'dobre', uk: 'добре', cat: 'catIntro'},
+        {sk: 'zle', uk: 'погано', cat: 'catIntro'},
+        {sk: 'veľa', uk: 'багато', cat: 'catIntro'},
+        {sk: 'málo', uk: 'мало', cat: 'catIntro'},
+        {sk: 'tu', uk: 'тут', cat: 'catIntro'},
+        {sk: 'tam', uk: 'там', cat: 'catIntro'},
+        {sk: 'napríklad', uk: 'наприклад', cat: 'catIntro'},
+        {sk: 'vlastne', uk: 'власне', cat: 'catIntro'},
+        {sk: 'určite', uk: 'напевно / точно', cat: 'catIntro'},
+        {sk: 'samozrejme', uk: 'звичайно / звісно', cat: 'catIntro'},
+        {sk: 'mimochodom', uk: 'між іншим', cat: 'catIntro'},
+        {sk: 'hlavne', uk: 'головне', cat: 'catIntro'},
+        {sk: 'nakoniec', uk: 'зрештою', cat: 'catIntro'},
+        {sk: 'okrem toho', uk: 'крім того', cat: 'catIntro'},
         {sk: 'vždy', uk: 'завжди', cat: 'catTime'},
         {sk: 'nikdy', uk: 'ніколи', cat: 'catTime'},
         {sk: 'často', uk: 'часто', cat: 'catTime'},
         {sk: 'zriedka', uk: 'рідко', cat: 'catTime'},
         {sk: 'včera', uk: 'вчора', cat: 'catTime'},
         {sk: 'dnes', uk: 'сьогодні', cat: 'catTime'},
-        
+        {sk: 'teraz', uk: 'зараз', cat: 'catTime'},
+        {sk: 'potom', uk: 'потім', cat: 'catTime'},
+        {sk: 'predtým', uk: 'раніше', cat: 'catTime'},
+        {sk: 'neskôr', uk: 'пізніше', cat: 'catTime'},
+        {sk: 'ráno', uk: 'вранці', cat: 'catTime'},
+        {sk: 'popoludní', uk: 'після обіду', cat: 'catTime'},
+        {sk: 'večer', uk: 'увечері', cat: 'catTime'},
+        {sk: 'v noci', uk: 'уночі', cat: 'catTime'},
         {sk: 'zajtra', uk: 'завтра', cat: 'catTimeFuture'},
         {sk: 'nasledujúci', uk: 'наступний', cat: 'catTimeFuture'},
         {sk: 'víkend', uk: 'вихідні', cat: 'catTimeFuture'},
@@ -204,7 +234,6 @@
         {sk: 'piatok', uk: 'п\'ятниця', cat: 'catTimeFuture'},
         {sk: 'sobota', uk: 'субота', cat: 'catTimeFuture'},
         {sk: 'nedeľa', uk: 'неділя', cat: 'catTimeFuture'},
-        
         {sk: 'nula', uk: 'нуль (0)', cat: 'catNumbers'},
         {sk: 'jeden', uk: 'один (1)', cat: 'catNumbers'},
         {sk: 'dva', uk: 'два (2)', cat: 'catNumbers'},
@@ -224,12 +253,31 @@
         {sk: 'päťdesiat', uk: 'п\'ятдесят (50)', cat: 'catNumbers'},
         {sk: 'sto', uk: 'сто (100)', cat: 'catNumbers'},
         {sk: 'tisíc', uk: 'тисяча (1000)', cat: 'catNumbers'},
-        
+        {sk: 'Cítim sa zle', uk: 'Я почуваюся погано', cat: 'catPhrases'},
+        {sk: 'Cítim sa výborne', uk: 'Я почуваюся чудово', cat: 'catPhrases'},
+        {sk: 'jej', uk: 'її', cat: 'catPhrases'},
+        {sk: 'jeho', uk: 'його', cat: 'catPhrases'},
+        {sk: 'ich', uk: 'їх', cat: 'catPhrases'},
+        {sk: 'Nerozumiem', uk: 'Я не розумію', cat: 'catPhrases'},
+        {sk: 'zase / znova', uk: 'знову', cat: 'catPhrases'},
+        {sk: 'zatiaľ', uk: 'поки', cat: 'catPhrases'},
+        {sk: 'práve (teraz)', uk: 'саме (зараз)', cat: 'catPhrases'},
+        {sk: 'konečne', uk: 'нарешті', cat: 'catPhrases'},
+        {sk: 'teda', uk: 'отже / так', cat: 'catPhrases'},
+        {sk: 'asi', uk: 'мабуть / напевно', cat: 'catPhrases'},
+        {sk: 'možno', uk: 'можливо', cat: 'catPhrases'},
+        {sk: 'naozaj?', uk: 'справді?', cat: 'catPhrases'},
+        {sk: 'starý otec', uk: 'дідусь', cat: 'catFamily'},
+        {sk: 'stará mama', uk: 'бабуся', cat: 'catFamily'},
+        {sk: 'svokor', uk: 'свекор / тесть', cat: 'catFamily'},
+        {sk: 'svokra', uk: 'свекруха / теща', cat: 'catFamily'},
+        {sk: 'ženatý muž', uk: 'одружений чоловік', cat: 'catFamily'},
+        {sk: 'vydatá žena', uk: 'заміжня жінка', cat: 'catFamily'},
+        {sk: 'slobodný / slobodná', uk: 'неодружений / незаміжня', cat: 'catFamily'},
         {sk: 'Tínedžer má 13 rokov', uk: 'Підлітку 13 років', cat: 'catVarious'},
         {sk: 'jednoduchá úloha', uk: 'просте завдання', cat: 'catVarious'},
         {sk: 'zložitá úloha', uk: 'складне завдання', cat: 'catVarious'},
         {sk: 'obliekať sa', uk: 'одягатися', cat: 'catVarious'},
-        
         {sk: 'Rozumela som ti', uk: 'Я тебе зрозуміла', cat: 'catPastPhrases'},
         {sk: 'Minúť peniaze', uk: 'Витратити гроші', cat: 'catPastPhrases'},
         {sk: 'Vyhovie mi čas', uk: 'Мені підходить час', cat: 'catPastPhrases'},
@@ -367,7 +415,7 @@
         }, 1600); 
     }
 
-    ['chkOld', 'chkByt', 'chkNew', 'chkModal', 'chkPast', 'catFamily', 'catPhrases', 'catTime', 'catTimeFuture', 'catNumbers', 'catVarious', 'catPastPhrases'].forEach(id => {
+    ['chkOld', 'chkByt', 'chkNew', 'chkModal', 'chkPast', 'catQuestions', 'catIntro', 'catTime', 'catTimeFuture', 'catNumbers', 'catFamily', 'catPhrases', 'catVarious', 'catPastPhrases'].forEach(id => {
         const el = document.getElementById(id);
         if(el) el.addEventListener('change', startGame);
     });
