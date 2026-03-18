@@ -31,6 +31,7 @@
             justify-content: center;
             gap: 10px;
             margin-bottom: 20px;
+            flex-wrap: wrap;
         }
         .mode-btn {
             padding: 10px 15px;
@@ -90,7 +91,6 @@
         button.option-btn.wrong { background-color: #f8d7da; border-color: #dc3545; color: #721c24; }
         .score { margin-top: 20px; color: #666; font-size: 1rem; font-weight: bold; }
         .feedback { height: 25px; margin-bottom: 5px; font-weight: bold; font-size: 1.1rem;}
-        
         .hidden { display: none; }
     </style>
 </head>
@@ -106,17 +106,21 @@
     
     <div id="settingsVerbs" class="settings">
         <strong>Обери групи дієслів:</strong>
-        <label><input type="checkbox" id="chkOld" checked> База (Robiť, Hrať...)</label>
-        <label><input type="checkbox" id="chkByt" checked> Дієслово BYŤ (Бути)</label>
-        <label><input type="checkbox" id="chkNew" checked> Група -ovať (Pracovať...)</label>
+        <label><input type="checkbox" id="chkOld"> База (Robiť, Hrať...)</label>
+        <label><input type="checkbox" id="chkByt"> Дієслово BYŤ (Бути)</label>
+        <label><input type="checkbox" id="chkNew"> Група -ovať (Pracovať...)</label>
+        <label><input type="checkbox" id="chkModal"> Модальні (Musieť, Môcť...)</label>
+        <label><input type="checkbox" id="chkPast" checked> Минулий час (Rozumel, Rozhodol...)</label>
     </div>
 
     <div id="settingsVocab" class="settings hidden">
         <strong>Обери теми для словника:</strong>
-        <label><input type="checkbox" id="catFamily" checked> Сім'я та стосунки</label>
-        <label><input type="checkbox" id="catPhrases" checked> Фрази та займенники</label>
-        <label><input type="checkbox" id="catTime" checked> Час та прислівники</label>
-        <label><input type="checkbox" id="catVarious" checked> Різні слова (одяг, завдання...)</label>
+        <label><input type="checkbox" id="catFamily"> Сім'я та стосунки</label>
+        <label><input type="checkbox" id="catPhrases"> Фрази та займенники</label>
+        <label><input type="checkbox" id="catTime"> Час (Минуле/Теперішнє)</label>
+        <label><input type="checkbox" id="catTimeFuture"> Час (Майбутнє/Дні тижня)</label>
+        <label><input type="checkbox" id="catVarious"> Різні слова</label>
+        <label><input type="checkbox" id="catPastPhrases" checked> Нові слова (-núť, минулий час)</label>
     </div>
 
     <div class="feedback" id="feedback"></div>
@@ -131,7 +135,8 @@
         'robiť': ['robím', 'robíš', 'robí', 'robíme', 'robíte', 'robia'],
         'kúpiť': ['kúpim', 'kúpiš', 'kúpi', 'kúpime', 'kúpite', 'kúpia'],
         'hrať':  ['hrám',  'hráš',  'hrá',  'hráme',  'hráte',  'hrajú'],
-        'volať': ['volám', 'voláš', 'volá', 'voláme', 'voláte', 'volajú']
+        'volať': ['volám', 'voláš', 'volá', 'voláme', 'voláte', 'volajú'],
+        'mať':   ['mám',   'máš',   'má',   'máme',   'máte',   'majú']
     };
     const dataByt = {
         'byť': ['som', 'si', 'je', 'sme', 'ste', 'sú']
@@ -139,33 +144,47 @@
     const dataNew = {
         'čítať':    ['čítam', 'čítaš', 'číta', 'čítame', 'čítate', 'čítajú'],
         'pracovať': ['pracujem', 'pracuješ', 'pracuje', 'pracujeme', 'pracujete', 'pracujú'],
-        'cestovať': ['cestujem', 'cestuješ', 'cestuje', 'cestujeme', 'cestujete', 'cestujú']
+        'cestovať': ['cestujem', 'cestuješ', 'cestuje', 'cestujeme', 'cestujete', 'cestujú'],
+        'učiť':     ['učím', 'učíš', 'učí', 'učíme', 'učíte', 'učia']
     };
-    const pronouns = ['Ja', 'Ty', 'On/Ona/Ono', 'My', 'Vy', 'Oni'];
+    const dataModal = {
+        'musieť':  ['musím', 'musíš', 'musí', 'musíme', 'musíte', 'musia'],
+        'môcť':    ['môžem', 'môžeš', 'môže', 'môžeme', 'môžete', 'môžu'],
+        'chcieť':  ['chcem', 'chceš', 'chce', 'chceme', 'chcete', 'chcú'],
+        'vedieť':  ['viem', 'vieš', 'vie', 'vieme', 'viete', 'vedia']
+    };
+    const dataPast = {
+        'rozumieť (min. čas - він/вони)':  ['rozumel som', 'rozumel si', 'rozumel', 'rozumeli sme', 'rozumeli ste', 'rozumeli'],
+        'rozhodnúť sa (min. čas - він/вони)': ['rozhodol som sa', 'rozhodol si sa', 'rozhodol sa', 'rozhodli sme sa', 'rozhodli ste sa', 'rozhodli sa'],
+        'musieť (min. čas - він/вони)':    ['musel som', 'musel si', 'musel', 'museli sme', 'museli ste', 'museli'],
+        'chcieť (min. čas - він/вони)':    ['chcel som', 'chcel si', 'chcel', 'chceli sme', 'chceli ste', 'chceli'],
+        'smiet\' (min. čas - він/вони)':   ['smel som', 'smel si', 'smel', 'smeli sme', 'smeli ste', 'smeli']
+    };
+    const pronouns = ['Ja', 'Ty', 'On', 'My', 'Vy', 'Oni'];
 
     const vocabData = [
         {sk: 'Cítim sa zle', uk: 'Я почуваюся погано', cat: 'catPhrases'},
         {sk: 'Cítim sa výborne', uk: 'Я почуваюся чудово', cat: 'catPhrases'},
-        {sk: 'chcem', uk: 'я хочу', cat: 'catPhrases'},
         {sk: 'jej', uk: 'її', cat: 'catPhrases'},
         {sk: 'jeho', uk: 'його', cat: 'catPhrases'},
         {sk: 'ich', uk: 'їх', cat: 'catPhrases'},
         {sk: 'Nerozumiem', uk: 'Я не розумію', cat: 'catPhrases'},
-        {sk: 'Dáme si kávu?', uk: 'Вип\'ємо кави?', cat: 'catPhrases'},
+        {sk: 'zase / znova', uk: 'знову', cat: 'catPhrases'},
+        {sk: 'zatiaľ', uk: 'поки', cat: 'catPhrases'},
+        {sk: 'práve (teraz)', uk: 'саме (зараз)', cat: 'catPhrases'},
+        {sk: 'konečne', uk: 'нарешті', cat: 'catPhrases'},
+        {sk: 'teda', uk: 'отже / так', cat: 'catPhrases'},
+        {sk: 'asi', uk: 'мабуть / напевно', cat: 'catPhrases'},
+        {sk: 'možno', uk: 'можливо', cat: 'catPhrases'},
+        {sk: 'naozaj?', uk: 'справді?', cat: 'catPhrases'},
         
-        {sk: 'starý otec / dedko', uk: 'дідусь', cat: 'catFamily'},
-        {sk: 'stará mama / babka', uk: 'бабуся', cat: 'catFamily'},
-        {sk: 'starí rodičia', uk: 'старші батьки (дід і баба)', cat: 'catFamily'},
-        {sk: 'manžel', uk: 'чоловік (у шлюбі)', cat: 'catFamily'},
-        {sk: 'manželka', uk: 'дружина', cat: 'catFamily'},
-        {sk: 'bratranec', uk: 'двоюрідний брат', cat: 'catFamily'},
-        {sk: 'sesternica', uk: 'двоюрідна сестра', cat: 'catFamily'},
+        {sk: 'starý otec', uk: 'дідусь', cat: 'catFamily'},
+        {sk: 'stará mama', uk: 'бабуся', cat: 'catFamily'},
         {sk: 'svokor', uk: 'свекор / тесть', cat: 'catFamily'},
         {sk: 'svokra', uk: 'свекруха / теща', cat: 'catFamily'},
         {sk: 'ženatý muž', uk: 'одружений чоловік', cat: 'catFamily'},
         {sk: 'vydatá žena', uk: 'заміжня жінка', cat: 'catFamily'},
-        {sk: 'slobodný muž', uk: 'незаміжній чоловік / холостяк', cat: 'catFamily'},
-        {sk: 'slobodná žena', uk: 'незаміжня жінка', cat: 'catFamily'},
+        {sk: 'slobodný / slobodná', uk: 'неодружений / незаміжня', cat: 'catFamily'},
         
         {sk: 'vždy', uk: 'завжди', cat: 'catTime'},
         {sk: 'nikdy', uk: 'ніколи', cat: 'catTime'},
@@ -173,19 +192,35 @@
         {sk: 'zriedka', uk: 'рідко', cat: 'catTime'},
         {sk: 'včera', uk: 'вчора', cat: 'catTime'},
         {sk: 'dnes', uk: 'сьогодні', cat: 'catTime'},
-        {sk: 'zajtra', uk: 'завтра', cat: 'catTime'},
-        {sk: 'doobeda', uk: 'до обіду', cat: 'catTime'},
-        {sk: 'poobede', uk: 'після обіду', cat: 'catTime'},
-        {sk: 'večer', uk: 'вечір / ввечері', cat: 'catTime'},
+        
+        {sk: 'zajtra', uk: 'завтра', cat: 'catTimeFuture'},
+        {sk: 'nasledujúci', uk: 'наступний', cat: 'catTimeFuture'},
+        {sk: 'víkend', uk: 'вихідні', cat: 'catTimeFuture'},
+        {sk: 'pondelok', uk: 'понеділок', cat: 'catTimeFuture'},
+        {sk: 'utorok', uk: 'вівторок', cat: 'catTimeFuture'},
+        {sk: 'streda', uk: 'середа', cat: 'catTimeFuture'},
+        {sk: 'štvrtok', uk: 'четвер', cat: 'catTimeFuture'},
+        {sk: 'piatok', uk: 'п\'ятниця', cat: 'catTimeFuture'},
+        {sk: 'sobota', uk: 'субота', cat: 'catTimeFuture'},
+        {sk: 'nedeľa', uk: 'неділя', cat: 'catTimeFuture'},
         
         {sk: 'Tínedžer má 13 rokov', uk: 'Підлітку 13 років', cat: 'catVarious'},
         {sk: 'jednoduchá úloha', uk: 'просте завдання', cat: 'catVarious'},
         {sk: 'zložitá úloha', uk: 'складне завдання', cat: 'catVarious'},
-        {sk: 'tešiť sa', uk: 'радіти / чекати з нетерпінням', cat: 'catVarious'},
         {sk: 'obliekať sa', uk: 'одягатися', cat: 'catVarious'},
-        {sk: 'vziať si tašku', uk: 'взяти сумку', cat: 'catVarious'},
-        {sk: 'výlet na chatu', uk: 'поїздка на дачу', cat: 'catVarious'},
-        {sk: 'tiež', uk: 'також', cat: 'catVarious'}
+        
+        {sk: 'Rozumela som ti', uk: 'Я тебе зрозуміла', cat: 'catPastPhrases'},
+        {sk: 'Minúť peniaze', uk: 'Витратити гроші', cat: 'catPastPhrases'},
+        {sk: 'Vyhovie mi čas', uk: 'Мені підходить час', cat: 'catPastPhrases'},
+        {sk: 'Vyhovie mi ponuka', uk: 'Мені підходить пропозиція', cat: 'catPastPhrases'},
+        {sk: 'Ja som mrzol vtedy', uk: 'Я мерз тоді', cat: 'catPastPhrases'},
+        {sk: 'Ja som stretol', uk: 'Я зустрів', cat: 'catPastPhrases'},
+        {sk: 'starnúť', uk: 'старіти', cat: 'catPastPhrases'},
+        {sk: 'chudnúť', uk: 'худнути', cat: 'catPastPhrases'},
+        {sk: 'kradnúť', uk: 'красти', cat: 'catPastPhrases'},
+        {sk: 'bohatnúť', uk: 'багатіти', cat: 'catPastPhrases'},
+        {sk: 'miznúť', uk: 'зникати (напр. туман)', cat: 'catPastPhrases'},
+        {sk: 'vädnúť', uk: 'в\'янути', cat: 'catPastPhrases'}
     ];
 
     let currentMode = 'verbs';
@@ -217,13 +252,16 @@
         if (document.getElementById('chkOld').checked) Object.assign(activeData, dataOld);
         if (document.getElementById('chkByt').checked) Object.assign(activeData, dataByt);
         if (document.getElementById('chkNew').checked) Object.assign(activeData, dataNew);
-
-        if (Object.keys(activeData).length === 0) {
-            document.getElementById('chkByt').checked = true;
-            Object.assign(activeData, dataByt);
-        }
+        if (document.getElementById('chkModal').checked) Object.assign(activeData, dataModal);
+        if (document.getElementById('chkPast').checked) Object.assign(activeData, dataPast);
 
         const verbs = Object.keys(activeData);
+        if (verbs.length === 0) {
+            document.getElementById('question').innerText = "Обери групу дієслів!";
+            document.getElementById('options').innerHTML = '';
+            return;
+        }
+
         const currentVerb = verbs[Math.floor(Math.random() * verbs.length)];
         const currentIndex = Math.floor(Math.random() * 6); 
 
@@ -247,10 +285,10 @@
             return document.getElementById(item.cat) && document.getElementById(item.cat).checked;
         });
 
-        if (activeVocab.length < 4) {
-            document.getElementById('catFamily').checked = true;
-            document.getElementById('catPhrases').checked = true;
-            activeVocab = vocabData; 
+        if (activeVocab.length === 0) {
+            document.getElementById('question').innerText = "Обери тему словника!";
+            document.getElementById('options').innerHTML = '';
+            return;
         }
 
         const currentItem = activeVocab[Math.floor(Math.random() * activeVocab.length)];
@@ -305,11 +343,12 @@
         setTimeout(() => {
             document.getElementById('feedback').innerText = '';
             startGame();
-        }, 1800); 
+        }, 1600); 
     }
 
-    ['chkOld', 'chkByt', 'chkNew', 'catFamily', 'catPhrases', 'catTime', 'catVarious'].forEach(id => {
-        document.getElementById(id).addEventListener('change', startGame);
+    ['chkOld', 'chkByt', 'chkNew', 'chkModal', 'chkPast', 'catFamily', 'catPhrases', 'catTime', 'catTimeFuture', 'catVarious', 'catPastPhrases'].forEach(id => {
+        const el = document.getElementById(id);
+        if(el) el.addEventListener('change', startGame);
     });
 
     startGame();
