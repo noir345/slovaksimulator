@@ -18,23 +18,23 @@
         }
         .card {
             background: white;
-            padding: 2rem;
-            border-radius: 15px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            padding: 1.5rem;
+            border-radius: 20px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
             text-align: center;
-            max-width: 550px;
+            max-width: 650px;
             width: 100%;
         }
-        h2 { margin-top: 0; color: #333; margin-bottom: 20px; }
+        h2 { margin-top: 0; color: #333; margin-bottom: 15px; }
         .mode-selector {
             display: flex;
             justify-content: center;
             gap: 10px;
-            margin-bottom: 20px;
+            margin-bottom: 15px;
             flex-wrap: wrap;
         }
         .mode-btn {
-            padding: 10px 15px;
+            padding: 8px 12px;
             border: 2px solid #007bff;
             background: white;
             color: #007bff;
@@ -49,11 +49,11 @@
         }
         .settings {
             background: #f8f9fa;
-            padding: 15px;
-            border-radius: 8px;
-            margin-bottom: 20px;
+            padding: 12px;
+            border-radius: 10px;
+            margin-bottom: 15px;
             text-align: left;
-            font-size: 0.95rem;
+            font-size: 0.9rem;
             border: 1px solid #dee2e6;
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -62,24 +62,27 @@
         .settings strong { grid-column: 1 / -1; margin-bottom: 5px; display: block; }
         .settings label {
             display: block;
-            margin: 5px 0;
             cursor: pointer;
-            font-size: 0.9rem;
         }
+        
         .question {
-            font-size: 1.6rem;
-            margin: 20px 0;
+            font-size: 1.5rem;
+            margin: 10px 0 20px 0;
             font-weight: bold;
             color: #2c3e50;
-            min-height: 60px;
+            min-height: 50px;
             display: flex;
             align-items: center;
             justify-content: center;
         }
+
+        .feedback { height: 25px; margin-bottom: 5px; font-weight: bold; font-size: 1.1rem;}
+        
         .options {
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 10px;
+            margin-bottom: 20px;
         }
         button.option-btn {
             padding: 15px;
@@ -94,9 +97,9 @@
         button.option-btn:hover { background-color: #f8f9fa; border-color: #ccc; }
         button.option-btn.correct { background-color: #d4edda; border-color: #28a745; color: #155724; }
         button.option-btn.wrong { background-color: #f8d7da; border-color: #dc3545; color: #721c24; }
-        .score { margin-top: 20px; color: #666; font-size: 1rem; font-weight: bold; }
-        .feedback { height: 25px; margin-bottom: 5px; font-weight: bold; font-size: 1.1rem;}
-        .hidden { display: none; }
+
+        .score { margin-top: 15px; color: #666; font-size: 0.95rem; font-weight: bold; }
+        .hidden { display: none !important; }
         
         @media (max-width: 480px) {
             .settings { grid-template-columns: 1fr; }
@@ -109,30 +112,30 @@
     <h2>Тренажер</h2>
     
     <div class="mode-selector">
-        <button id="btnModeVerbs" class="mode-btn active" onclick="setMode('verbs')">Дієслова (Граматика)</button>
-        <button id="btnModeVocab" class="mode-btn" onclick="setMode('vocab')">Вчити слова</button>
+        <button id="btnModeVerbs" class="mode-btn active" onclick="setMode('verbs')">Граматика</button>
+        <button id="btnModeVocab" class="mode-btn" onclick="setMode('vocab')">Слова</button>
     </div>
     
     <div id="settingsVerbs" class="settings">
-        <strong>Обери групи дієслів:</strong>
-        <label><input type="checkbox" id="chkOld"> База (Robiť, Hrať...)</label>
-        <label><input type="checkbox" id="chkByt"> Дієслово BYŤ (Бути)</label>
-        <label><input type="checkbox" id="chkNew"> Група -ovať (Pracovať...)</label>
+        <strong>Граматика:</strong>
+        <label><input type="checkbox" id="chkOld" checked> База (Robiť, Hrať...)</label>
+        <label><input type="checkbox" id="chkByt" checked> Дієслово BYŤ (Бути)</label>
+        <label><input type="checkbox" id="chkNew" checked> Група -ovať (Pracovať...)</label>
         <label><input type="checkbox" id="chkModal"> Модальні (Musieť, Môcť...)</label>
         <label><input type="checkbox" id="chkPast"> Минулий час (Rozumel, Rozhodol...)</label>
     </div>
 
     <div id="settingsVocab" class="settings hidden">
-        <strong>Обери теми для словника:</strong>
-        <label><input type="checkbox" id="catQuestions" checked> ❓ Питання та сполучники</label>
-        <label><input type="checkbox" id="catIntro" checked> 💬 База (Так/Ні, Вступні)</label>
-        <label><input type="checkbox" id="catTime"> 🕒 Час (Сьогодні, вранці...)</label>
-        <label><input type="checkbox" id="catTimeFuture"> 📅 Дні тижня та майбутнє</label>
-        <label><input type="checkbox" id="catNumbers"> 🔢 Числа (0-1000)</label>
-        <label><input type="checkbox" id="catFamily"> 👨‍👩‍👧 Сім'я та стосунки</label>
-        <label><input type="checkbox" id="catPhrases"> 🗣 Фрази та займенники</label>
-        <label><input type="checkbox" id="catPastPhrases"> 🔙 Нові слова (Минулий час)</label>
-        <label><input type="checkbox" id="catVarious"> 📦 Різні слова</label>
+        <strong>Теми словника:</strong>
+        <label><input type="checkbox" id="catShops" checked> 🏪 Магазини</label>
+        <label><input type="checkbox" id="catClothes"> 👕 Одяг</label>
+        <label><input type="checkbox" id="catFeelings"> 🎭 Емоції та стан</label>
+        <label><input type="checkbox" id="catThings"> 🪑 Речі та дім</label>
+        <label><input type="checkbox" id="catAnimals"> 🐾 Тварини</label>
+        <label><input type="checkbox" id="catProfessions"> 💼 Професії</label>
+        <label><input type="checkbox" id="catColors"> 🎨 Кольори</label>
+        <label><input type="checkbox" id="catNumbers"> 🔢 Числа (0-100)</label>
+        <label><input type="checkbox" id="catQuestions"> ❓ Питання</label>
     </div>
 
     <div class="feedback" id="feedback"></div>
@@ -166,135 +169,98 @@
         'vedieť':  ['viem', 'vieš', 'vie', 'vieme', 'viete', 'vedia']
     };
     const dataPast = {
-        'rozumieť (min. čas - він/вони)':  ['rozumel som', 'rozumel si', 'rozumel', 'rozumeli sme', 'rozumeli ste', 'rozumeli'],
-        'rozhodnúť sa (min. čas - він/вони)': ['rozhodol som sa', 'rozhodol si sa', 'rozhodol sa', 'rozhodli sme sa', 'rozhodli ste sa', 'rozhodli sa'],
-        'musieť (min. čas - він/вони)':    ['musel som', 'musel si', 'musel', 'museli sme', 'museli ste', 'museli'],
-        'chcieť (min. čas - він/вони)':    ['chcel som', 'chcel si', 'chcel', 'chceli sme', 'chceli ste', 'chceli'],
-        'smiet\' (min. čas - він/вони)':   ['smel som', 'smel si', 'smel', 'smeli sme', 'smeli ste', 'smeli']
+        'rozumieť (min. čas)':  ['rozumel som', 'rozumel si', 'rozumel', 'rozumeli sme', 'rozumeli ste', 'rozumeli'],
+        'rozhodnúť sa (min. čas)': ['rozhodol som sa', 'rozhodol si sa', 'rozhodol sa', 'rozhodli sme sa', 'rozhodli ste sa', 'rozhodli sa'],
+        'musieť (min. čas)':    ['musel som', 'musel si', 'musel', 'museli sme', 'museli ste', 'museli'],
+        'chcieť (min. čas)':    ['chcel som', 'chcel si', 'chcel', 'chceli sme', 'chceli ste', 'chceli'],
+        'smiet\' (min. čas)':   ['smel som', 'smel si', 'smel', 'smeli sme', 'smeli ste', 'smeli'],
+        'robiť (min. čas - чол)': ['robil som', 'robil si', 'robil', 'robili sme', 'robili ste', 'robili'],
+        'mať (min. čas - чол)': ['mal som', 'mal si', 'mal', 'mali sme', 'mali ste', 'mali'],
+        'volať (min. čas - чол)': ['volal som', 'volal si', 'volal', 'volali sme', 'volali ste', 'volali']
     };
     const pronouns = ['Ja', 'Ty', 'On', 'My', 'Vy', 'Oni'];
 
     const vocabData = [
-        {sk: 'kto', uk: 'хто', cat: 'catQuestions'},
-        {sk: 'čo', uk: 'що (питання)', cat: 'catQuestions'},
+        {sk: 'Obchod', uk: 'Магазин', cat: 'catShops'},
+        {sk: 'Potraviny', uk: 'Продуктовий магазин', cat: 'catShops'},
+        {sk: 'Pekáreň', uk: 'Пекарня', cat: 'catShops'},
+        {sk: 'Lekáreň', uk: 'Аптека', cat: 'catShops'},
+        {sk: 'Drogéria', uk: 'Побутова хімія / Косметика', cat: 'catShops'},
+        {sk: 'Mäsiarstvo', uk: 'М\'ясний магазин', cat: 'catShops'},
+        {sk: 'Kníhkupectvo', uk: 'Книжковий магазин', cat: 'catShops'},
+        {sk: 'Kvetinárstvo', uk: 'Квітковий магазин', cat: 'catShops'},
+        {sk: 'Oblečenie', uk: 'Магазин одягу', cat: 'catShops'},
+        {sk: 'Obuv', uk: 'Взуттєвий магазин', cat: 'catShops'},
+        {sk: 'Reštaurácia', uk: 'Ресторан', cat: 'catShops'},
+        {sk: 'Kaviareň', uk: 'Кав\'ярня', cat: 'catShops'},
+        {sk: 'Nákupné centrum', uk: 'Торговий центр', cat: 'catShops'},
+        {sk: 'Pyžamo', uk: 'Піжама', cat: 'catClothes'},
+        {sk: 'Bunda', uk: 'Куртка', cat: 'catClothes'},
+        {sk: 'Nohavice', uk: 'Штани', cat: 'catClothes'},
+        {sk: 'Tričko', uk: 'Футболка', cat: 'catClothes'},
+        {sk: 'Topánky', uk: 'Взуття', cat: 'catClothes'},
+        {sk: 'Šaty', uk: 'Одяг / Сукня', cat: 'catClothes'},
+        {sk: 'Ponožky', uk: 'Шкарпетки', cat: 'catClothes'},
+        {sk: 'Sveter', uk: 'Светр', cat: 'catClothes'},
+        {sk: 'Nohavičky', uk: 'Трусики', cat: 'catClothes'},
+        {sk: 'Trenky', uk: 'Шорти', cat: 'catClothes'},
+        {sk: 'Tielko', uk: 'Майка', cat: 'catClothes'},
+        {sk: 'Pančuchy', uk: 'Панчохи', cat: 'catClothes'},
+        {sk: 'Šťastný', uk: 'Щасливий', cat: 'catFeelings'},
+        {sk: 'Smutný', uk: 'Сумний', cat: 'catFeelings'},
+        {sk: 'Nahnevaný', uk: 'Сердитий', cat: 'catFeelings'},
+        {sk: 'Unavený', uk: 'Втомлений', cat: 'catFeelings'},
+        {sk: 'Hladný', uk: 'Голодний', cat: 'catFeelings'},
+        {sk: 'Smädný', uk: 'Хочу пити', cat: 'catFeelings'},
+        {sk: 'Bojím sa', uk: 'Я наляканий', cat: 'catFeelings'},
+        {sk: 'Spokojný', uk: 'Задоволений', cat: 'catFeelings'},
+        {sk: 'Zima', uk: 'Холодно', cat: 'catFeelings'},
+        {sk: 'Teplo', uk: 'Тепло', cat: 'catFeelings'},
+        {sk: 'Potrebujem objať', uk: 'Мені потрібні обійми', cat: 'catFeelings'},
+        {sk: 'Mačka', uk: 'Кішка', cat: 'catAnimals'},
+        {sk: 'Pes', uk: 'Собака', cat: 'catAnimals'},
+        {sk: 'Papagáj', uk: 'Папуга', cat: 'catAnimals'},
+        {sk: 'Korytnačka', uk: 'Черепаха', cat: 'catAnimals'},
+        {sk: 'Vojak', uk: 'Солдат', cat: 'catProfessions'},
+        {sk: 'Šofér', uk: 'Водій', cat: 'catProfessions'},
+        {sk: 'Zubár', uk: 'Стоматолог', cat: 'catProfessions'},
+        {sk: 'Policajt', uk: 'Поліцейський', cat: 'catProfessions'},
+        {sk: 'Učiteľ', uk: 'Вчитель', cat: 'catProfessions'},
+        {sk: 'Zverolekár', uk: 'Ветеринар', cat: 'catProfessions'},
+        {sk: 'Letec', uk: 'Пілот', cat: 'catProfessions'},
+        {sk: 'Novinár', uk: 'Журналіст', cat: 'catProfessions'},
+        {sk: 'Pero', uk: 'Ручка', cat: 'catThings'},
+        {sk: 'Кlávesnica', uk: 'Клавіатура', cat: 'catThings'},
+        {sk: 'Sтôl', uk: 'Стіл', cat: 'catThings'},
+        {sk: 'Sтоlička', uk: 'Стілець', cat: 'catThings'},
+        {sk: 'Okno', uk: 'Вікно', cat: 'catThings'},
+        {sk: 'Taška', uk: 'Сумка', cat: 'catThings'},
+        {sk: 'Auto', uk: 'Авто', cat: 'catThings'},
+        {sk: 'Kniha', uk: 'Книга', cat: 'catThings'},
+        {sk: 'Počítač', uk: 'Комп\'ютер', cat: 'catThings'},
+        {sk: 'Lampa', uk: 'Лампа', cat: 'catThings'},
+        {sk: 'Tlačiareň', uk: 'Принтер', cat: 'catThings'},
+        {sk: 'Uterák', uk: 'Рушник', cat: 'catThings'},
+        {sk: 'Deka', uk: 'Ковдра', cat: 'catThings'},
+        {sk: 'Žalúzie', uk: 'Жалюзі', cat: 'catThings'},
+        {sk: 'biela', uk: 'біла', cat: 'catColors'},
+        {sk: 'čierna', uk: 'чорна', cat: 'catColors'},
+        {sk: 'modrá', uk: 'синя', cat: 'catColors'},
+        {sk: 'zelená', uk: 'зелена', cat: 'catColors'},
+        {sk: 'červená', uk: 'червона', cat: 'catColors'},
+        {sk: 'farebná', uk: 'кольорова', cat: 'catColors'},
+        {sk: 'desať (10)', uk: 'десять', cat: 'catNumbers'},
+        {sk: 'dvadsať (20)', uk: 'двадцять', cat: 'catNumbers'},
+        {sk: 'päťdesiat (50)', uk: 'п\'ятдесят', cat: 'catNumbers'},
         {sk: 'kde', uk: 'де', cat: 'catQuestions'},
         {sk: 'prečo', uk: 'чому', cat: 'catQuestions'},
-        {sk: 'ako', uk: 'як', cat: 'catQuestions'},
-        {sk: 'kedy', uk: 'коли (питання)', cat: 'catQuestions'},
-        {sk: 'a / i', uk: 'і / та', cat: 'catQuestions'},
-        {sk: 'ale', uk: 'але', cat: 'catQuestions'},
-        {sk: 'alebo', uk: 'або', cat: 'catQuestions'},
-        {sk: 'že', uk: 'що (сполучник)', cat: 'catQuestions'},
-        {sk: 'keď', uk: 'коли (сполучник)', cat: 'catQuestions'},
-        {sk: 'kým', uk: 'поки', cat: 'catQuestions'},
-        {sk: 'lebo / pretože', uk: 'бо / тому що', cat: 'catQuestions'},
-        {sk: 'ak', uk: 'якщо', cat: 'catQuestions'},
-        {sk: 'hoci', uk: 'хоча', cat: 'catQuestions'},
-        {sk: 'takže', uk: 'отже (тому)', cat: 'catQuestions'},
-        {sk: 'či', uk: 'чи', cat: 'catQuestions'},
-        {sk: 'preto', uk: 'тому', cat: 'catQuestions'},
-        {sk: 'aj keď', uk: 'навіть якщо', cat: 'catQuestions'},
-        {sk: 'áno', uk: 'так', cat: 'catIntro'},
-        {sk: 'nie', uk: 'ні', cat: 'catIntro'},
-        {sk: 'dobre', uk: 'добре', cat: 'catIntro'},
-        {sk: 'zle', uk: 'погано', cat: 'catIntro'},
-        {sk: 'veľa', uk: 'багато', cat: 'catIntro'},
-        {sk: 'málo', uk: 'мало', cat: 'catIntro'},
-        {sk: 'tu', uk: 'тут', cat: 'catIntro'},
-        {sk: 'tam', uk: 'там', cat: 'catIntro'},
-        {sk: 'napríklad', uk: 'наприклад', cat: 'catIntro'},
-        {sk: 'vlastne', uk: 'власне', cat: 'catIntro'},
-        {sk: 'určite', uk: 'напевно / точно', cat: 'catIntro'},
-        {sk: 'samozrejme', uk: 'звичайно / звісно', cat: 'catIntro'},
-        {sk: 'mimochodom', uk: 'між іншим', cat: 'catIntro'},
-        {sk: 'hlavne', uk: 'головне', cat: 'catIntro'},
-        {sk: 'nakoniec', uk: 'зрештою', cat: 'catIntro'},
-        {sk: 'okrem toho', uk: 'крім того', cat: 'catIntro'},
-        {sk: 'vždy', uk: 'завжди', cat: 'catTime'},
-        {sk: 'nikdy', uk: 'ніколи', cat: 'catTime'},
-        {sk: 'často', uk: 'часто', cat: 'catTime'},
-        {sk: 'zriedka', uk: 'рідко', cat: 'catTime'},
-        {sk: 'včera', uk: 'вчора', cat: 'catTime'},
-        {sk: 'dnes', uk: 'сьогодні', cat: 'catTime'},
-        {sk: 'teraz', uk: 'зараз', cat: 'catTime'},
-        {sk: 'potom', uk: 'потім', cat: 'catTime'},
-        {sk: 'predtým', uk: 'раніше', cat: 'catTime'},
-        {sk: 'neskôr', uk: 'пізніше', cat: 'catTime'},
-        {sk: 'ráno', uk: 'вранці', cat: 'catTime'},
-        {sk: 'popoludní', uk: 'після обіду', cat: 'catTime'},
-        {sk: 'večer', uk: 'увечері', cat: 'catTime'},
-        {sk: 'v noci', uk: 'уночі', cat: 'catTime'},
-        {sk: 'zajtra', uk: 'завтра', cat: 'catTimeFuture'},
-        {sk: 'nasledujúci', uk: 'наступний', cat: 'catTimeFuture'},
-        {sk: 'víkend', uk: 'вихідні', cat: 'catTimeFuture'},
-        {sk: 'pondelok', uk: 'понеділок', cat: 'catTimeFuture'},
-        {sk: 'utorok', uk: 'вівторок', cat: 'catTimeFuture'},
-        {sk: 'streda', uk: 'середа', cat: 'catTimeFuture'},
-        {sk: 'štvrtok', uk: 'четвер', cat: 'catTimeFuture'},
-        {sk: 'piatok', uk: 'п\'ятниця', cat: 'catTimeFuture'},
-        {sk: 'sobota', uk: 'субота', cat: 'catTimeFuture'},
-        {sk: 'nedeľa', uk: 'неділя', cat: 'catTimeFuture'},
-        {sk: 'nula', uk: 'нуль (0)', cat: 'catNumbers'},
-        {sk: 'jeden', uk: 'один (1)', cat: 'catNumbers'},
-        {sk: 'dva', uk: 'два (2)', cat: 'catNumbers'},
-        {sk: 'tri', uk: 'три (3)', cat: 'catNumbers'},
-        {sk: 'štyri', uk: 'чотири (4)', cat: 'catNumbers'},
-        {sk: 'päť', uk: 'п\'ять (5)', cat: 'catNumbers'},
-        {sk: 'šesť', uk: 'шість (6)', cat: 'catNumbers'},
-        {sk: 'sedem', uk: 'сім (7)', cat: 'catNumbers'},
-        {sk: 'osem', uk: 'вісім (8)', cat: 'catNumbers'},
-        {sk: 'deväť', uk: 'дев\'ять (9)', cat: 'catNumbers'},
-        {sk: 'desať', uk: 'десять (10)', cat: 'catNumbers'},
-        {sk: 'jedenásť', uk: 'одинадцять (11)', cat: 'catNumbers'},
-        {sk: 'dvanásť', uk: 'дванадцять (12)', cat: 'catNumbers'},
-        {sk: 'dvadsať', uk: 'двадцять (20)', cat: 'catNumbers'},
-        {sk: 'tridsať', uk: 'тридцять (30)', cat: 'catNumbers'},
-        {sk: 'štyridsať', uk: 'сорок (40)', cat: 'catNumbers'},
-        {sk: 'päťdesiat', uk: 'п\'ятдесят (50)', cat: 'catNumbers'},
-        {sk: 'sto', uk: 'сто (100)', cat: 'catNumbers'},
-        {sk: 'tisíc', uk: 'тисяча (1000)', cat: 'catNumbers'},
-        {sk: 'Cítim sa zle', uk: 'Я почуваюся погано', cat: 'catPhrases'},
-        {sk: 'Cítim sa výborne', uk: 'Я почуваюся чудово', cat: 'catPhrases'},
-        {sk: 'jej', uk: 'її', cat: 'catPhrases'},
-        {sk: 'jeho', uk: 'його', cat: 'catPhrases'},
-        {sk: 'ich', uk: 'їх', cat: 'catPhrases'},
-        {sk: 'Nerozumiem', uk: 'Я не розумію', cat: 'catPhrases'},
-        {sk: 'zase / znova', uk: 'знову', cat: 'catPhrases'},
-        {sk: 'zatiaľ', uk: 'поки', cat: 'catPhrases'},
-        {sk: 'práve (teraz)', uk: 'саме (зараз)', cat: 'catPhrases'},
-        {sk: 'konečne', uk: 'нарешті', cat: 'catPhrases'},
-        {sk: 'teda', uk: 'отже / так', cat: 'catPhrases'},
-        {sk: 'asi', uk: 'мабуть / напевно', cat: 'catPhrases'},
-        {sk: 'možno', uk: 'можливо', cat: 'catPhrases'},
-        {sk: 'naozaj?', uk: 'справді?', cat: 'catPhrases'},
-        {sk: 'starý otec', uk: 'дідусь', cat: 'catFamily'},
-        {sk: 'stará mama', uk: 'бабуся', cat: 'catFamily'},
-        {sk: 'svokor', uk: 'свекор / тесть', cat: 'catFamily'},
-        {sk: 'svokra', uk: 'свекруха / теща', cat: 'catFamily'},
-        {sk: 'ženatý muž', uk: 'одружений чоловік', cat: 'catFamily'},
-        {sk: 'vydatá žena', uk: 'заміжня жінка', cat: 'catFamily'},
-        {sk: 'slobodný / slobodná', uk: 'неодружений / незаміжня', cat: 'catFamily'},
-        {sk: 'Tínedžer má 13 rokov', uk: 'Підлітку 13 років', cat: 'catVarious'},
-        {sk: 'jednoduchá úloha', uk: 'просте завдання', cat: 'catVarious'},
-        {sk: 'zložitá úloha', uk: 'складне завдання', cat: 'catVarious'},
-        {sk: 'obliekať sa', uk: 'одягатися', cat: 'catVarious'},
-        {sk: 'Rozumela som ti', uk: 'Я тебе зрозуміла', cat: 'catPastPhrases'},
-        {sk: 'Minúť peniaze', uk: 'Витратити гроші', cat: 'catPastPhrases'},
-        {sk: 'Vyhovie mi čas', uk: 'Мені підходить час', cat: 'catPastPhrases'},
-        {sk: 'Vyhovie mi ponuka', uk: 'Мені підходить пропозиція', cat: 'catPastPhrases'},
-        {sk: 'Ja som mrzol vtedy', uk: 'Я мерз тоді', cat: 'catPastPhrases'},
-        {sk: 'Ja som stretol', uk: 'Я зустрів', cat: 'catPastPhrases'},
-        {sk: 'starnúť', uk: 'старіти', cat: 'catPastPhrases'},
-        {sk: 'chudnúť', uk: 'худнути', cat: 'catPastPhrases'},
-        {sk: 'kradnúť', uk: 'красти', cat: 'catPastPhrases'},
-        {sk: 'bohatnúť', uk: 'багатіти', cat: 'catPastPhrases'},
-        {sk: 'miznúť', uk: 'зникати (напр. туман)', cat: 'catPastPhrases'},
-        {sk: 'vädnúť', uk: 'в\'янути', cat: 'catPastPhrases'}
+        {sk: 'keď', uk: 'коли', cat: 'catQuestions'}
     ];
 
     let currentMode = 'verbs';
     let score = 0;
     let mistakes = 0;
+    let isWaiting = false;
 
     function setMode(mode) {
         currentMode = mode;
@@ -309,6 +275,7 @@
     }
 
     function startGame() {
+        isWaiting = false;
         if (currentMode === 'verbs') {
             playVerbs();
         } else {
@@ -326,27 +293,19 @@
 
         const verbs = Object.keys(activeData);
         if (verbs.length === 0) {
-            document.getElementById('question').innerText = "Обери групу дієслів!";
+            document.getElementById('question').innerText = "Обери тему!";
             document.getElementById('options').innerHTML = '';
             return;
         }
 
         const currentVerb = verbs[Math.floor(Math.random() * verbs.length)];
         const currentIndex = Math.floor(Math.random() * 6); 
-
         const pronoun = pronouns[currentIndex];
         document.getElementById('question').innerText = `${pronoun} + ${currentVerb.toUpperCase()}`;
 
         const correctAns = activeData[currentVerb][currentIndex];
-        let options = [correctAns];
-
-        while (options.length < 4) {
-            let randomIdx = Math.floor(Math.random() * 6);
-            let wrongAns = activeData[currentVerb][randomIdx];
-            if (!options.includes(wrongAns)) options.push(wrongAns);
-        }
-
-        renderButtons(options, correctAns);
+        let options = generateFourOptions(correctAns, activeData[currentVerb]);
+        renderOptions(options, correctAns);
     }
 
     function playVocab() {
@@ -354,8 +313,8 @@
             return document.getElementById(item.cat) && document.getElementById(item.cat).checked;
         });
 
-        if (activeVocab.length === 0) {
-            document.getElementById('question').innerText = "Обери тему словника!";
+        if (activeVocab.length < 4) {
+            document.getElementById('question').innerText = "Обери теми!";
             document.getElementById('options').innerHTML = '';
             return;
         }
@@ -363,18 +322,22 @@
         const currentItem = activeVocab[Math.floor(Math.random() * activeVocab.length)];
         document.getElementById('question').innerText = currentItem.sk;
 
-        let options = [currentItem.uk];
-        
-        while (options.length < 4) {
-            let randomItem = vocabData[Math.floor(Math.random() * vocabData.length)];
-            if (!options.includes(randomItem.uk)) options.push(randomItem.uk);
-        }
-
-        renderButtons(options, currentItem.uk);
+        let allUkAnswers = vocabData.map(i => i.uk);
+        let options = generateFourOptions(currentItem.uk, allUkAnswers);
+        renderOptions(options, currentItem.uk);
     }
 
-    function renderButtons(options, correctAns) {
-        options.sort(() => Math.random() - 0.5);
+    function generateFourOptions(correct, allData) {
+        let options = [correct];
+        while (options.length < 4) {
+            let randomIdx = Math.floor(Math.random() * allData.length);
+            let wrongAns = allData[randomIdx];
+            if (!options.includes(wrongAns)) options.push(wrongAns);
+        }
+        return options.sort(() => Math.random() - 0.5);
+    }
+
+    function renderOptions(options, correctAns) {
         const container = document.getElementById('options');
         container.innerHTML = '';
         
@@ -388,6 +351,9 @@
     }
 
     function checkAnswer(btn, selected, correct) {
+        if (isWaiting) return;
+        isWaiting = true;
+
         const buttons = document.querySelectorAll('.option-btn');
         buttons.forEach(b => b.disabled = true); 
 
@@ -415,7 +381,7 @@
         }, 1600); 
     }
 
-    ['chkOld', 'chkByt', 'chkNew', 'chkModal', 'chkPast', 'catQuestions', 'catIntro', 'catTime', 'catTimeFuture', 'catNumbers', 'catFamily', 'catPhrases', 'catVarious', 'catPastPhrases'].forEach(id => {
+    ['chkOld', 'chkByt', 'chkNew', 'chkModal', 'chkPast', 'catShops', 'catClothes', 'catFeelings', 'catThings', 'catAnimals', 'catProfessions', 'catColors', 'catNumbers', 'catQuestions'].forEach(id => {
         const el = document.getElementById(id);
         if(el) el.addEventListener('change', startGame);
     });
